@@ -1,5 +1,7 @@
 
+using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Presistence;
 using Presistence.Data;
 
 namespace E_Commerce.Web
@@ -16,6 +18,7 @@ namespace E_Commerce.Web
             builder.Services.AddControllers(); // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddScoped<IDataSeeding, DataSeeding>();
 
             builder.Services.AddDbContext<StoreDbContext>(Opt =>
             {
@@ -23,6 +26,10 @@ namespace E_Commerce.Web
             });
 
             var app = builder.Build();
+
+            using var Scope = app.Services.CreateScope();
+            var ObjectOfDataSeeding = Scope.ServiceProvider.GetRequiredService<IDataSeeding>();
+            ObjectOfDataSeeding.DataSeed();
 
             #endregion
 
