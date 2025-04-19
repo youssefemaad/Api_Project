@@ -6,6 +6,7 @@ using Presistence.Data;
 using Presistence.Repository;
 using Service;
 using Service.MappingProfile;
+using ServiceAbstraction;
 
 namespace E_Commerce.Web
 {
@@ -23,6 +24,7 @@ namespace E_Commerce.Web
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
             builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
 
             builder.Services.AddDbContext<StoreDbContext>(Opt =>
