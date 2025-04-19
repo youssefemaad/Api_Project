@@ -3,6 +3,7 @@ using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Presistence;
 using Presistence.Data;
+using Presistence.Repository;
 
 namespace E_Commerce.Web
 {
@@ -19,6 +20,8 @@ namespace E_Commerce.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
 
             builder.Services.AddDbContext<StoreDbContext>(Opt =>
             {
@@ -32,7 +35,7 @@ namespace E_Commerce.Web
             using var Scope = app.Services.CreateScope();
             var ObjectOfDataSeeding = Scope.ServiceProvider.GetRequiredService<IDataSeeding>();
             await ObjectOfDataSeeding.DataSeedAsync();
-            
+
             #endregion
 
             #endregion
