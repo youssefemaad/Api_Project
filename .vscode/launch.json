@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        
+        {
+            "name": "C#: E-Commerce.Web Debug",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "D:/Youssef/Projects/Routes_Course/API/E-Commerce.Web/E-Commerce.Web/bin/Debug/net8.0/E-Commerce.Web.dll",
+            "cwd": "D:/Youssef/Projects/Routes_Course/API/E-Commerce.Web/E-Commerce.Web",
+            "stopAtEntry": false
+        }
+    ]
+}
