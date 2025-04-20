@@ -20,7 +20,7 @@ namespace Presistence
                 if (!_dbContext.ProductBrands.Any())
                 {
                     // var ProductBrandsData = await File.ReadAllTextAsync(@"..\Data\DataSeed\brands.json");
-                    var ProductBrandsData = File.OpenRead(@"..\Data\DataSeed\brands.json");
+                    var ProductBrandsData = File.OpenRead(@"..\Infrastructure\Presistence\Data\DataSeed\brands.json");
                     var ProductBrands = await JsonSerializer.DeserializeAsync<List<ProductBrand>>(ProductBrandsData);
 
                     if (ProductBrands is not null && ProductBrands.Any())
@@ -31,7 +31,7 @@ namespace Presistence
 
                 if (!_dbContext.ProductTypes.Any())
                 {
-                    var ProductTypesData = File.OpenRead(@"..\Data\DataSeed\types.json");
+                    var ProductTypesData = File.OpenRead(@"..\Infrastructure\Presistence\Data\DataSeed\types.json");
                     var ProductTypes = await JsonSerializer.DeserializeAsync<List<ProductType>>(ProductTypesData);
 
                     if (ProductTypes is not null && ProductTypes.Any())
@@ -42,7 +42,7 @@ namespace Presistence
 
                 if (!_dbContext.Products.Any())
                 {
-                    var ProductsData = File.OpenRead(@"..\Data\DataSeed\products.json");
+                    var ProductsData = File.OpenRead(@"..\Infrastructure\Presistence\Data\DataSeed\products.json");
                     var Products = await JsonSerializer.DeserializeAsync<List<Product>>(ProductsData);
 
                     if (Products is not null && Products.Any())
@@ -55,7 +55,9 @@ namespace Presistence
             }
             catch (Exception ex)
             {
-                //TODO
+                Console.WriteLine($"Error during data seeding: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
+                throw;
             }
         }
     }
