@@ -3,6 +3,10 @@ using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Presistence;
 using Presistence.Data;
+using Presistence.Repository;
+using Service;
+using Service.MappingProfile;
+using ServiceAbstraction;
 
 namespace E_Commerce.Web
 {
@@ -19,6 +23,9 @@ namespace E_Commerce.Web
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
 
             builder.Services.AddDbContext<StoreDbContext>(Opt =>
             {
@@ -32,7 +39,7 @@ namespace E_Commerce.Web
             using var Scope = app.Services.CreateScope();
             var ObjectOfDataSeeding = Scope.ServiceProvider.GetRequiredService<IDataSeeding>();
             await ObjectOfDataSeeding.DataSeedAsync();
-            
+
             #endregion
 
             #endregion
@@ -46,8 +53,9 @@ namespace E_Commerce.Web
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
 
             app.MapControllers();
