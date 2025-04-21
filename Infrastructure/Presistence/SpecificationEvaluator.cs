@@ -33,6 +33,12 @@ namespace Presistence
                 // }
                 query = specification.IncludeExpressions.Aggregate(query, (current, include) => current.Include(include));
             }
+
+            if (specification.IsPaginated)
+            {
+                query = query.Skip(specification.Skip).Take(specification.Take);
+            }
+
             return query;
         }
     }

@@ -29,6 +29,8 @@ namespace Service.Specifications
                     AddOrderBy(n => n.Id);
                     break;
             }
+
+            
         }
 
         public ProductWithBrandAndTypeSpecifications(int id) : base(n => n.Id == id)

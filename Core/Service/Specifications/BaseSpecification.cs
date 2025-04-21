@@ -23,6 +23,23 @@ namespace Service.Specifications
 
         #endregion
 
+        #region Pagination
+
+        public int Skip { get; private set; }
+
+        public int Take { get; private set; }
+
+        public bool IsPaginated { get; set; }
+
+        protected void ApplyPagination(int PageSize, int PageIndex)
+        {
+            IsPaginated = true;
+            Skip = PageSize * (PageIndex - 1);
+            Take = PageSize;
+        }
+
+        #endregion
+
         #region OrderBy
 
         public Expression<Func<TEntity, object>>? OrderBy { get; private set; }
