@@ -11,9 +11,18 @@ namespace Presistence
         {
             var query = inputQuery;
 
-            if (specification.Criteria != null)
+            if (specification.Criteria is not null)
             {
                 query = query.Where(specification.Criteria);
+            }
+
+            if (specification.OrderBy is not null)
+            {
+                query = query.OrderBy(specification.OrderBy);
+            }
+            else if (specification.OrderByDescending != null)
+            {
+                query = query.OrderByDescending(specification.OrderByDescending);
             }
 
             if (specification.IncludeExpressions is not null && specification.IncludeExpressions.Count > 0)
@@ -22,9 +31,7 @@ namespace Presistence
                 // {
                 //     query = query.Include(include);
                 // }
-                {
-                    query = specification.IncludeExpressions.Aggregate(query, (current, include) => current.Include(include));
-                }
+                query = specification.IncludeExpressions.Aggregate(query, (current, include) => current.Include(include));
             }
             return query;
         }
