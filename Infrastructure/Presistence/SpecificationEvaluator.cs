@@ -38,6 +38,7 @@ namespace Presistence
             {
                 query = query.Skip(specification.Skip).Take(specification.Take);
             }
+            
 
             return query;
         }
