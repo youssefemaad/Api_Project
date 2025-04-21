@@ -5,13 +5,13 @@ namespace Service.Specifications
 {
     class ProductWithBrandAndTypeSpecifications : BaseSpecification<Product, int>
     {
-        public ProductWithBrandAndTypeSpecifications(int? brandId, int? typeId, ProductSortingOptions? sortingOptions) :
-                    base(P =>(!brandId.HasValue || P.BrandId == brandId) && (!typeId.HasValue || P.TypeId == typeId))
+        public ProductWithBrandAndTypeSpecifications(ProductQueryParams queryParams) :
+                    base(P =>(!queryParams.BrandId.HasValue || P.BrandId == queryParams.BrandId) && (!queryParams.TypeId.HasValue || P.TypeId == queryParams.TypeId))
         {
             AddInclude(n => n.ProductBrand);
             AddInclude(n => n.ProductType);
 
-            switch (sortingOptions)
+            switch (queryParams.SortingOptions)
             {
                 case ProductSortingOptions.PriceAsc:
                     AddOrderBy(n => n.Price);
