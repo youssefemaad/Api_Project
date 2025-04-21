@@ -30,7 +30,7 @@ namespace Service.Specifications
                     break;
             }
 
-            
+            ApplyPagination(queryParams.PageIndex, queryParams.PageSize);
         }
 
         public ProductWithBrandAndTypeSpecifications(int id) : base(n => n.Id == id)
