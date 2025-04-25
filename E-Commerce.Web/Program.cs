@@ -47,6 +47,7 @@ namespace E_Commerce.Web
             #region Configure The Http Request Pipeline
 
             app.UseMiddleware<CustomExceptionMiddleWare>();
+            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

@@ -5,6 +5,7 @@ namespace E_Commerce.Web.Controllers
 {
     public class CustomExceptionMiddleWare
     {
+        
         private readonly RequestDelegate _next;
         private readonly ILogger<CustomExceptionMiddleWare> _logger;
 
