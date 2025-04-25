@@ -1,11 +1,13 @@
 using System.Net;
+using DomainLayer.Exceptions;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Shared.ErrorModels;
 
 namespace E_Commerce.Web.Controllers
 {
     public class CustomExceptionMiddleWare
     {
-        
+
         private readonly RequestDelegate _next;
         private readonly ILogger<CustomExceptionMiddleWare> _logger;
 
@@ -26,7 +28,11 @@ namespace E_Commerce.Web.Controllers
                 _logger.LogError(ex, ex.Message);
 
                 //Set status code for the response
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = ex switch
+                {
+                    NotFoundException => (int)HttpStatusCode.NotFound,
+                    _ => StatusCodes.Status500InternalServerError
+                };
 
                 //Set Content type for the response
                 context.Response.ContentType = "application/json";
