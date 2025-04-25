@@ -1,5 +1,7 @@
 using DomainLayer.Contracts;
 using E_Commerce.Web.Controllers;
+using E_Commerce.Web.Factories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presistence;
 using Presistence.Data;
@@ -7,6 +9,7 @@ using Presistence.Repository;
 using Service;
 using Service.MappingProfile;
 using ServiceAbstraction;
+using Shared.ErrorModels;
 
 namespace E_Commerce.Web
 {
@@ -26,7 +29,10 @@ namespace E_Commerce.Web
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
             builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
-
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationErrorResponse;
+            });
             builder.Services.AddDbContext<StoreDbContext>(Opt =>
             {
                 Opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -47,7 +53,7 @@ namespace E_Commerce.Web
             #region Configure The Http Request Pipeline
 
             app.UseMiddleware<CustomExceptionMiddleWare>();
-            
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
