@@ -1,5 +1,5 @@
-
 using DomainLayer.Contracts;
+using E_Commerce.Web.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Presistence;
 using Presistence.Data;
@@ -44,7 +44,10 @@ namespace E_Commerce.Web
 
             #endregion
 
-            #region Configure The Http Request PipeLine
+            #region Configure The Http Request Pipeline
+
+            app.UseMiddleware<CustomExceptionMiddleWare>();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -55,13 +58,11 @@ namespace E_Commerce.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            //app.UseAuthorization();
-
-
             app.MapControllers();
 
             #endregion
 
+            // Start the web server
             app.Run();
         }
     }
