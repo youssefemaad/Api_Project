@@ -8,12 +8,11 @@ namespace E_Commerce.Web.Factories
         public static IActionResult GenerateApiValidationErrorResponse(ActionContext context)
         {
             var Errors = context.ModelState.Where(M => M.Value.Errors.Any())
-                        .Select(M => new ValidationError()
-                        {
-                            Field = M.Key,
-                            Errors = M.Value.Errors.Select(E => E.ErrorMessage),
-
-                        });
+                    .Select(M => new ValidationError()
+                    {
+                        Field = M.Key,
+                        Errors = M.Value.Errors.Select(E => E.ErrorMessage),
+                    });
             var Response = new ValidationErrorToReturn()
             {
                 ValidationErrors = Errors,
