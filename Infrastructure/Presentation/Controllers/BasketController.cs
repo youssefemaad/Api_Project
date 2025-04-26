@@ -17,6 +17,7 @@ namespace Presentation.Controllers
         }
 
         //Create Or Update Basket
+        [HttpPost]
         public async Task<ActionResult<BasketDto>> CreateOrUpdateBasket (BasketDto basketDto)
         {
             var basket = await serviceManager.basketService.CreateOrUpdateAsync(basketDto);
