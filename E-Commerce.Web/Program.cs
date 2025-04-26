@@ -1,5 +1,7 @@
 using DomainLayer.Contracts;
 using E_Commerce.Web.Controllers;
+using E_Commerce.Web.Factories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Presistence;
 using Presistence.Data;
@@ -7,6 +9,7 @@ using Presistence.Repository;
 using Service;
 using Service.MappingProfile;
 using ServiceAbstraction;
+using Shared.ErrorModels;
 
 namespace E_Commerce.Web
 {
@@ -20,25 +23,19 @@ namespace E_Commerce.Web
             #region Add Services to the Container
 
             builder.Services.AddControllers(); // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<IDataSeeding, DataSeeding>();
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddScoped<IServiceManager, ServiceManager>();
-            builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
+            
+            builder.Services.AddSwaggerServices();
+            builder.Services.AddApplicationServices();
+            builder.Services.AddWebApplicationServices();
+            builder.Services.AddInfrastructureServices(builder.Configuration);
 
-            builder.Services.AddDbContext<StoreDbContext>(Opt =>
-            {
-                Opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            });
+            
 
             var app = builder.Build();
 
             #region Data Seeding
 
-            using var Scope = app.Services.CreateScope();
-            var ObjectOfDataSeeding = Scope.ServiceProvider.GetRequiredService<IDataSeeding>();
-            await ObjectOfDataSeeding.DataSeedAsync();
+            await app.SeedDataBaseAsync();
 
             #endregion
 
@@ -46,13 +43,13 @@ namespace E_Commerce.Web
 
             #region Configure The Http Request Pipeline
 
-            app.UseMiddleware<CustomExceptionMiddleWare>();
+            app.UseCustomExceptionMiddleware();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerMiddleWares();
             }
 
             app.UseHttpsRedirection();
