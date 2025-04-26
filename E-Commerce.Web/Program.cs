@@ -1,35 +1,65 @@
+using DomainLayer.Contracts;
+using E_Commerce.Web.Controllers;
+using E_Commerce.Web.Factories;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Presistence;
+using Presistence.Data;
+using Presistence.Repository;
+using Service;
+using Service.MappingProfile;
+using ServiceAbstraction;
+using Shared.ErrorModels;
 
 namespace E_Commerce.Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            #region Add Services to the Container
 
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddControllers(); // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            
+            builder.Services.AddSwaggerServices();
+            builder.Services.AddApplicationServices();
+            builder.Services.AddWebApplicationServices();
+            builder.Services.AddInfrastructureServices(builder.Configuration);
+
+            
 
             var app = builder.Build();
+
+            #region Data Seeding
+
+            await app.SeedDataBaseAsync();
+
+            #endregion
+
+            #endregion
+
+            #region Configure The Http Request Pipeline
+
+            app.UseCustomExceptionMiddleware();
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerMiddleWares();
             }
 
             app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
+            app.UseStaticFiles();
 
             app.MapControllers();
 
+            #endregion
+
+            // Start the web server
             app.Run();
         }
     }
