@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Presistence.Data;
+using Presistence.Data.Identity;
 using Presistence.Repository;
 using StackExchange.Redis;
 
@@ -23,6 +24,11 @@ public static class InfraStractureServicesRegistration
         services.AddDbContext<StoreDbContext>(Opt =>
         {
             Opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+        });
+
+        services.AddDbContext<StoreIdentityDbContex>(Opt =>
+        {
+            Opt.UseSqlServer(configuration.GetConnectionString("IdentityConnection"));
         });
 
         return services;
