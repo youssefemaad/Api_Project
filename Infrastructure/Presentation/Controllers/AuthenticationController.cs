@@ -6,6 +6,7 @@ namespace Presentation.Controllers
 {
     public class AuthenticationController(IServiceManager _serviceManager) : ApiControllerBase
     {
+
         #region Login
 
         [HttpPost("login")]
@@ -27,5 +28,6 @@ namespace Presentation.Controllers
         }
 
         #endregion
+    
     }
 }
