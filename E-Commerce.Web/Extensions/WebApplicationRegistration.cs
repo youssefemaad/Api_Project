@@ -10,6 +10,7 @@ public static class WebApplicationRegistration
         using var Scope = app.Services.CreateScope();
         var ObjectOfDataSeeding = Scope.ServiceProvider.GetRequiredService<IDataSeeding>();
         await ObjectOfDataSeeding.DataSeedAsync();
+        await ObjectOfDataSeeding.IdentityDataSeedAsync();
     }
 
     public static IApplicationBuilder UseCustomExceptionMiddleware(this IApplicationBuilder app)

@@ -33,10 +33,16 @@ namespace E_Commerce.Web.Controllers
 
         private static async Task HandeleExceptionAsync(HttpContext context, Exception ex)
         {
+            var Response = new ErrorToReturn()
+            {
+                ErrorMessage = ex.Message,
+            };
             //Set status code for the response
             context.Response.StatusCode = ex switch
             {
-                NotFoundException => (int)HttpStatusCode.NotFound,
+                NotFoundException => StatusCodes.Status404NotFound,
+                UnAuthorizedException => StatusCodes.Status401Unauthorized,
+                BadRequestException badRequestException=> GetBadRequestErrors(badRequestException, Response),
                 _ => StatusCodes.Status500InternalServerError
             };
 
@@ -44,14 +50,17 @@ namespace E_Commerce.Web.Controllers
             context.Response.ContentType = "application/json";
 
             //Set response Object
-            var ErrorToReturn = new ErrorToReturn()
-            {
-                StatusCode = context.Response.StatusCode,
-                ErrorMessage = ex.Message
-            };
+            
 
             //Return Object as Json
-            await context.Response.WriteAsJsonAsync(ErrorToReturn);
+            context.Response.StatusCode = Response.StatusCode;
+            await context.Response.WriteAsJsonAsync(Response);
+        }
+
+        private static int GetBadRequestErrors(BadRequestException badRequestException, ErrorToReturn response)
+        {
+            response.Errors = badRequestException.Errors;
+            return StatusCodes.Status400BadRequest;
         }
 
         private static async Task HandleNotFoundEndPointAsync(HttpContext context)
