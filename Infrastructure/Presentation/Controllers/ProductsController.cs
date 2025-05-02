@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
 using Shared;
@@ -10,7 +11,7 @@ namespace Presentation.Controllers
     public class ProductsController(IServiceManager _serviceManager) : ApiControllerBase
     {
         #region Get All Products
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<PaginationResult<ProductDto>>> GetAllProducts([FromQuery]ProductQueryParams queryParams)
         {
