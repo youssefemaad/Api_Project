@@ -1,4 +1,6 @@
 using DomainLayer.Contracts;
+using DomainLayer.Models.IdentityModule;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +18,10 @@ public static class InfraStractureServicesRegistration
         services.AddScoped<IDataSeeding, DataSeeding>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IBasketRepository,BasketRepository>();
+        services.AddIdentityCore<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<StoreIdentityDbContex>();
+        
         services.AddSingleton<IConnectionMultiplexer>((_) => 
         {
             return ConnectionMultiplexer.Connect(configuration.GetConnectionString("RedisConnectionString"));
