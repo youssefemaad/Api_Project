@@ -4,7 +4,7 @@ namespace DomainLayer.orderModule;
 
 public class OrderItem : BaseEntity<int>
 {
-    public ProductItemOrder ProductItem { get; set; } = default!;
+    public ProductItemOrder Product { get; set; } = default!;
     public int Quantity { get; set; }
     public decimal Price { get; set; }   
 }
