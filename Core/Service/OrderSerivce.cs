@@ -1,0 +1,56 @@
+using AutoMapper;
+using DomainLayer.Contracts;
+using DomainLayer.Exceptions;
+using DomainLayer.Models;
+using DomainLayer.Models.BasketModule;
+using DomainLayer.orderModule;
+using ServiceAbstraction;
+using Shared.DataTransferObject.IdentityModuleDto;
+using Shared.DataTransferObject.OrderDtos;
+
+namespace Service;
+
+public class OrderSerivce(IMapper _mapper, IBasketRepository basketRepository, IUnitOfWork unitOfWork) : IOrderSerivce
+{
+    public async Task<OrderToReturnDto> CreateOrder(OrderDto orderDto, string Email)
+    {
+        var OrderAddress = _mapper.Map<AddressDto, OrderAddress>(orderDto.Address);
+        var Basket = await basketRepository.GetBasketAsync(orderDto.BasketId)?? throw new BasketNotFoundException(orderDto.BasketId);
+        List<OrderItem> orderItems = [];
+        var ProductRepo = unitOfWork.GetRepository<Product, int>();
+
+        foreach (var item in Basket.Items)
+        {
+            var product = await ProductRepo.GetByIdAsync(item.Id) ?? throw new ProductNotFoundException(item.Id);
+
+
+            orderItems.Add(CreateOrderItem(item, product));
+        }
+
+        var DeliveryMethod = await unitOfWork.GetRepository<DeliveryMethod, int>().GetByIdAsync(orderDto.DeliveryMethodId) 
+            ?? throw new DeliveryMethodNotFoundException(orderDto.DeliveryMethodId);
+
+        var subtotal = orderItems.Sum(item => item.Price * item.Quantity);
+        var order = new Order(Email, OrderAddress, DeliveryMethod, orderItems, subtotal);
+
+        await unitOfWork.GetRepository<Order, Guid>().AddAsync(order);
+        await unitOfWork.SaveChangesAsync();
+
+        return _mapper.Map<Order, OrderToReturnDto>(order);
+    }
+
+    private static OrderItem CreateOrderItem(BasketItem item, Product product)
+    {
+        return new OrderItem()
+        {
+            Product = new ProductItemOrder()
+            {
+                ProductId = product.Id,
+                PictureUrl = product.PictureUrl,
+                ProductName = product.Name
+            },
+            Price = product.Price,
+            Quantity = item.Quantity
+        };
+    }
+}
