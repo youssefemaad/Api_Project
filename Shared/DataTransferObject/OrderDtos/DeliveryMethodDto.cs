@@ -1,12 +1,10 @@
-using DomainLayer.Models;
+namespace Shared.DataTransferObject.OrderDtos;
 
-namespace DomainLayer.orderModule;
-
-public class DeliveryMethod : BaseEntity<int>
+public class DeliveryMethodDto
 {
+    public int Id { get; set; }
     public string ShortName { get; set; } = default!;
     public string DeliveryTime { get; set; } = default!;
     public decimal Price { get; set; }
     public string Description { get; set; } = default!;
-    
 }

@@ -4,6 +4,7 @@ using DomainLayer.Exceptions;
 using DomainLayer.Models;
 using DomainLayer.Models.BasketModule;
 using DomainLayer.orderModule;
+using Service.Specifications;
 using ServiceAbstraction;
 using Shared.DataTransferObject.IdentityModuleDto;
 using Shared.DataTransferObject.OrderDtos;
@@ -53,4 +54,25 @@ public class OrderSerivce(IMapper _mapper, IBasketRepository basketRepository, I
             Quantity = item.Quantity
         };
     }
+
+    public async Task<IEnumerable<DeliveryMethodDto>> GetDeliveryMethodsAsync()
+    {
+        var deliveryMethods = await unitOfWork.GetRepository<DeliveryMethod, int>().GetAllAsync();
+        return _mapper.Map<IEnumerable<DeliveryMethod>, IEnumerable<DeliveryMethodDto>>(deliveryMethods);
+    }
+
+    public async Task<IEnumerable<OrderToReturnDto>> GetAllOrdersAsync(string Email)
+    {
+        var Spec = new OrderSpecification(Email);
+        var orders = await unitOfWork.GetRepository<Order, Guid>().GetAllAsync(Spec);
+        return _mapper.Map<IEnumerable<Order>, IEnumerable<OrderToReturnDto>>(orders);
+    }
+
+    public async Task<OrderToReturnDto> GetOrderById(Guid id)
+    {
+        var spec = new OrderSpecification(id);
+        var Order = await unitOfWork.GetRepository<Order, Guid>().GetByIdAsync(spec);
+        return _mapper.Map<Order, OrderToReturnDto>(Order);
+    }
+
 }
