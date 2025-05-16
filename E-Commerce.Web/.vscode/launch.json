@@ -2,13 +2,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch E-Commerce API",
+            "name": ".NET Core Launch (web)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/E-Commerce.Web/bin/Debug/net8.0/E-Commerce.Web.dll",
+            "program": "${workspaceFolder}/bin/Debug/net8.0/E-Commerce.Web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/E-Commerce.Web",
+            "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -21,6 +21,11 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
         }
     ]
 }
